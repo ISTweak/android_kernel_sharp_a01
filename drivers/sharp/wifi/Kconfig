@@ -1,0 +1,17 @@
+# drivers/sharp/wifi/Kconfig
+
+menu "Wi-Fi Configuration"
+
+config WIFIPM
+	bool "WLAN Power Management Support"
+	default y
+	help
+	  Power management implementation for WLAN Functionality.
+
+config BROADCOM_WIFI
+	bool "Broadcom Wifi Support"
+	default y
+	help
+	  Enable Broadcom WiFi device driver.
+
+endmenu

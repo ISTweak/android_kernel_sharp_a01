@@ -1,0 +1,47 @@
+# drivers/sharp/proximity/Kconfig
+
+menu "Proximity Configuration"
+
+config SENSORS_PROXIMITY
+	tristate "Proximity Sensor Driver"
+	depends on I2C
+
+choice
+    prompt "IRQ Setting"
+    depends on SENSORS_PROXIMITY
+    default PROXIMITY_REV_ALL
+
+config PROXIMITY_REV_ALL
+    bool "revision All"
+    depends on SENSORS_PROXIMITY
+
+config PROXIMITY_REV_TYPE1
+    bool "revision 1"
+    depends on SENSORS_PROXIMITY
+
+config PROXIMITY_REV_TYPE2
+    bool "revision 2"
+    depends on SENSORS_PROXIMITY
+
+endchoice
+
+choice
+    prompt "Sensitivity Setting"
+    depends on SENSORS_PROXIMITY
+    default OTHER_MODEL
+
+config OTHER_MODEL
+    bool "other"
+    depends on SENSORS_PROXIMITY
+
+config PROXIMITY_MODEL_TYPE1
+    bool "model 1"
+    depends on SENSORS_PROXIMITY
+
+config PROXIMITY_MODEL_TYPE2
+    bool "model 2"
+    depends on SENSORS_PROXIMITY
+
+endchoice
+
+endmenu
