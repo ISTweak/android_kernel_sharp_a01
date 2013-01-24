@@ -1,7 +1,7 @@
 /*
  * Automatically generated C config: don't edit
  * Linux kernel version: 2.6.35.7
- * Wed Jan 23 13:54:56 2013
+ * Thu Jan 24 08:50:43 2013
  */
 #define AUTOCONF_INCLUDED
 #define CONFIG_RING_BUFFER 1
@@ -789,6 +789,7 @@
 #define CONFIG_MSM_DALRPC 1
 #define CONFIG_USB_ANDROID_DIAG 1
 #define CONFIG_BATTERY_SH 1
+#define CONFIG_SECURITY 1
 #define CONFIG_SND_TIMER 1
 #define CONFIG_FAT_DEFAULT_CODEPAGE 437
 #define CONFIG_BLK_DEV 1
