@@ -121,7 +121,7 @@ static struct clkctl_acpu_speed acpu_freq_tbl[] = {
 #ifdef CONFIG_SHSYS_CUST
 	{ 0, 24576,  SRC_LPXO, 0, 0,  30720000,  1000, VDD_RAW(1000) },
 	{ 0, 61440,  PLL_3,    5, 11, 61440000,  1000, VDD_RAW(1000) },
-	{ 1, 122880, PLL_3,    5, 5,  61440000,  1000, VDD_RAW(1000) },
+	{ 1, 122880, PLL_3,    5, 5,  61440000,  950, VDD_RAW(950) },
 	{ 0, 184320, PLL_3,    5, 4,  61440000,  1000, VDD_RAW(1000) },
 	{ 0, MAX_AXI_KHZ, SRC_AXI, 1, 0, 61440000, 1000, VDD_RAW(1000) },
 	{ 1, 245760, PLL_3,    5, 2,  61440000,  1000, VDD_RAW(1000) },
@@ -154,8 +154,8 @@ static struct clkctl_acpu_speed acpu_freq_tbl[] = {
 	{ 1, 1612800, PLL_2,    3, 0,  UINT_MAX, 1300, VDD_RAW(1300), &pll2_tbl[5]},
 	{ 1, 1708800, PLL_2,    3, 0,  UINT_MAX, 1350, VDD_RAW(1350), &pll2_tbl[6]},
 	{ 1, 1804800, PLL_2,    3, 0,  UINT_MAX, 1400, VDD_RAW(1400), &pll2_tbl[7]},
-	{ 0, 1900800, PLL_2,    3, 0,  UINT_MAX, 1475, VDD_RAW(1475), &pll2_tbl[8]},
-	{ 0, 2048000, PLL_2,    3, 0,  UINT_MAX, 1475, VDD_RAW(1475), &pll2_tbl[9]},
+	{ 1, 1900800, PLL_2,    3, 0,  UINT_MAX, 1450, VDD_RAW(1450), &pll2_tbl[8]},
+	{ 0, 2048000, PLL_2,    3, 0,  UINT_MAX, 1450, VDD_RAW(1450), &pll2_tbl[9]},
 	{ 0 }
 
 };
