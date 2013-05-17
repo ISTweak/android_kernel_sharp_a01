@@ -637,7 +637,9 @@ repeat:
 	pagep = radix_tree_lookup_slot(&mapping->page_tree, offset);
 	if (pagep) {
 		page = radix_tree_deref_slot(pagep);
-		if (unlikely(!page || page == RADIX_TREE_RETRY))
+		if (unlikely(!page))
+			goto out;
+		if (radix_tree_deref_retry(page))
 			goto repeat;
 
 		if (!page_cache_get_speculative(page))
@@ -653,6 +655,7 @@ repeat:
 			goto repeat;
 		}
 	}
+out:
 	rcu_read_unlock();
 
 	return page;

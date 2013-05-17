@@ -396,53 +396,128 @@ int sk_chk_filter(struct sock_filter *filter, int flen)
 		/* Only allow valid instructions */
 		switch (ftest->code) {
 		case BPF_ALU|BPF_ADD|BPF_K:
+			ftest->code = BPF_S_ALU_ADD_K;
+			break;
 		case BPF_ALU|BPF_ADD|BPF_X:
+			ftest->code = BPF_S_ALU_ADD_X;
+			break;
 		case BPF_ALU|BPF_SUB|BPF_K:
+			ftest->code = BPF_S_ALU_SUB_K;
+			break;
 		case BPF_ALU|BPF_SUB|BPF_X:
+			ftest->code = BPF_S_ALU_SUB_X;
+			break;
 		case BPF_ALU|BPF_MUL|BPF_K:
+			ftest->code = BPF_S_ALU_MUL_K;
+			break;
 		case BPF_ALU|BPF_MUL|BPF_X:
+			ftest->code = BPF_S_ALU_MUL_X;
+			break;
 		case BPF_ALU|BPF_DIV|BPF_X:
+			ftest->code = BPF_S_ALU_DIV_X;
+			break;
 		case BPF_ALU|BPF_AND|BPF_K:
+			ftest->code = BPF_S_ALU_AND_K;
+			break;
 		case BPF_ALU|BPF_AND|BPF_X:
+			ftest->code = BPF_S_ALU_AND_X;
+			break;
 		case BPF_ALU|BPF_OR|BPF_K:
+			ftest->code = BPF_S_ALU_OR_K;
+			break;
 		case BPF_ALU|BPF_OR|BPF_X:
+			ftest->code = BPF_S_ALU_OR_X;
+			break;
 		case BPF_ALU|BPF_LSH|BPF_K:
+			ftest->code = BPF_S_ALU_LSH_K;
+			break;
 		case BPF_ALU|BPF_LSH|BPF_X:
+			ftest->code = BPF_S_ALU_LSH_X;
+			break;
 		case BPF_ALU|BPF_RSH|BPF_K:
+			ftest->code = BPF_S_ALU_RSH_K;
+			break;
 		case BPF_ALU|BPF_RSH|BPF_X:
+			ftest->code = BPF_S_ALU_RSH_X;
+			break;
 		case BPF_ALU|BPF_NEG:
+			ftest->code = BPF_S_ALU_NEG;
+			break;
 		case BPF_LD|BPF_W|BPF_ABS:
+			ftest->code = BPF_S_LD_W_ABS;
+			break;
 		case BPF_LD|BPF_H|BPF_ABS:
+			ftest->code = BPF_S_LD_H_ABS;
+			break;
 		case BPF_LD|BPF_B|BPF_ABS:
+			ftest->code = BPF_S_LD_B_ABS;
+			break;
 		case BPF_LD|BPF_W|BPF_LEN:
+			ftest->code = BPF_S_LD_W_LEN;
+			break;
 		case BPF_LD|BPF_W|BPF_IND:
+			ftest->code = BPF_S_LD_W_IND;
+			break;
 		case BPF_LD|BPF_H|BPF_IND:
+			ftest->code = BPF_S_LD_H_IND;
+			break;
 		case BPF_LD|BPF_B|BPF_IND:
+			ftest->code = BPF_S_LD_B_IND;
+			break;
 		case BPF_LD|BPF_IMM:
+			ftest->code = BPF_S_LD_IMM;
+			break;
 		case BPF_LDX|BPF_W|BPF_LEN:
+			ftest->code = BPF_S_LDX_W_LEN;
+			break;
 		case BPF_LDX|BPF_B|BPF_MSH:
+			ftest->code = BPF_S_LDX_B_MSH;
+			break;
 		case BPF_LDX|BPF_IMM:
+			ftest->code = BPF_S_LDX_IMM;
+			break;
 		case BPF_MISC|BPF_TAX:
+			ftest->code = BPF_S_MISC_TAX;
+			break;
 		case BPF_MISC|BPF_TXA:
+			ftest->code = BPF_S_MISC_TXA;
+			break;
 		case BPF_RET|BPF_K:
+			ftest->code = BPF_S_RET_K;
+			break;
 		case BPF_RET|BPF_A:
+			ftest->code = BPF_S_RET_A;
 			break;
 
 		/* Some instructions need special checks */
 
-		case BPF_ALU|BPF_DIV|BPF_K:
 			/* check for division by zero */
+		case BPF_ALU|BPF_DIV|BPF_K:
 			if (ftest->k == 0)
 				return -EINVAL;
+			ftest->code = BPF_S_ALU_DIV_K;
 			break;
 
+		/* check for invalid memory addresses */
 		case BPF_LD|BPF_MEM:
-		case BPF_LDX|BPF_MEM:
-		case BPF_ST:
-		case BPF_STX:
-			/* check for invalid memory addresses */
 			if (ftest->k >= BPF_MEMWORDS)
 				return -EINVAL;
+			ftest->code = BPF_S_LD_MEM;
+			break;
+		case BPF_LDX|BPF_MEM:
+			if (ftest->k >= BPF_MEMWORDS)
+				return -EINVAL;
+			ftest->code = BPF_S_LDX_MEM;
+			break;
+		case BPF_ST:
+			if (ftest->k >= BPF_MEMWORDS)
+				return -EINVAL;
+			ftest->code = BPF_S_ST;
+			break;
+		case BPF_STX:
+			if (ftest->k >= BPF_MEMWORDS)
+				return -EINVAL;
+			ftest->code = BPF_S_STX;
 			break;
 
 		case BPF_JMP|BPF_JA:
@@ -453,49 +528,77 @@ int sk_chk_filter(struct sock_filter *filter, int flen)
 			 */
 			if (ftest->k >= (unsigned)(flen-pc-1))
 				return -EINVAL;
+			ftest->code = BPF_S_JMP_JA;
 			break;
 
 		case BPF_JMP|BPF_JEQ|BPF_K:
+			ftest->code = BPF_S_JMP_JEQ_K;
+			break;
 		case BPF_JMP|BPF_JEQ|BPF_X:
+			ftest->code = BPF_S_JMP_JEQ_X;
+			break;
 		case BPF_JMP|BPF_JGE|BPF_K:
+			ftest->code = BPF_S_JMP_JGE_K;
+			break;
 		case BPF_JMP|BPF_JGE|BPF_X:
+			ftest->code = BPF_S_JMP_JGE_X;
+			break;
 		case BPF_JMP|BPF_JGT|BPF_K:
+			ftest->code = BPF_S_JMP_JGT_K;
+			break;
 		case BPF_JMP|BPF_JGT|BPF_X:
+			ftest->code = BPF_S_JMP_JGT_X;
+			break;
 		case BPF_JMP|BPF_JSET|BPF_K:
+			ftest->code = BPF_S_JMP_JSET_K;
+			break;
 		case BPF_JMP|BPF_JSET|BPF_X:
-			/* for conditionals both must be safe */
-			if (pc + ftest->jt + 1 >= flen ||
-			    pc + ftest->jf + 1 >= flen)
-				return -EINVAL;
+			ftest->code = BPF_S_JMP_JSET_X;
 			break;
 
 		default:
 			return -EINVAL;
 		}
+
+			/* for conditionals both must be safe */
+		switch (ftest->code) {
+		case BPF_S_JMP_JEQ_K:
+		case BPF_S_JMP_JEQ_X:
+		case BPF_S_JMP_JGE_K:
+		case BPF_S_JMP_JGE_X:
+		case BPF_S_JMP_JGT_K:
+		case BPF_S_JMP_JGT_X:
+		case BPF_S_JMP_JSET_X:
+		case BPF_S_JMP_JSET_K:
+			if (pc + ftest->jt + 1 >= flen ||
+			    pc + ftest->jf + 1 >= flen)
+				return -EINVAL;
+		}
 	}
 
-	return (BPF_CLASS(filter[flen - 1].code) == BPF_RET) ? 0 : -EINVAL;
+	/* last instruction must be a RET code */
+	switch (filter[flen - 1].code) {
+	case BPF_S_RET_K:
+	case BPF_S_RET_A:
+		return 0;
+		break;
+		default:
+			return -EINVAL;
+		}
 }
 EXPORT_SYMBOL(sk_chk_filter);
 
 /**
- * 	sk_filter_rcu_release: Release a socket filter by rcu_head
+ * 	sk_filter_release_rcu - Release a socket filter by rcu_head
  *	@rcu: rcu_head that contains the sk_filter to free
  */
-static void sk_filter_rcu_release(struct rcu_head *rcu)
+void sk_filter_release_rcu(struct rcu_head *rcu)
 {
 	struct sk_filter *fp = container_of(rcu, struct sk_filter, rcu);
 
-	sk_filter_release(fp);
+	kfree(fp);
 }
-
-static void sk_filter_delayed_uncharge(struct sock *sk, struct sk_filter *fp)
-{
-	unsigned int size = sk_filter_len(fp);
-
-	atomic_sub(size, &sk->sk_omem_alloc);
-	call_rcu_bh(&fp->rcu, sk_filter_rcu_release);
-}
+EXPORT_SYMBOL(sk_filter_release_rcu);
 
 /**
  *	sk_attach_filter - attach a socket filter
@@ -540,7 +643,7 @@ int sk_attach_filter(struct sock_fprog *fprog, struct sock *sk)
 	rcu_read_unlock_bh();
 
 	if (old_fp)
-		sk_filter_delayed_uncharge(sk, old_fp);
+		sk_filter_uncharge(sk, old_fp);
 	return 0;
 }
 EXPORT_SYMBOL_GPL(sk_attach_filter);
@@ -554,7 +657,7 @@ int sk_detach_filter(struct sock *sk)
 	filter = rcu_dereference_bh(sk->sk_filter);
 	if (filter) {
 		rcu_assign_pointer(sk->sk_filter, NULL);
-		sk_filter_delayed_uncharge(sk, filter);
+		sk_filter_uncharge(sk, filter);
 		ret = 0;
 	}
 	rcu_read_unlock_bh();

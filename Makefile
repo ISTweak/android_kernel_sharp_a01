@@ -1,7 +1,7 @@
 VERSION = 2
 PATCHLEVEL = 6
 SUBLEVEL = 35
-EXTRAVERSION = .7
+EXTRAVERSION = .14
 NAME = Yokohama
 
 # *DOCUMENTATION*
@@ -534,7 +534,7 @@ all: vmlinux
 ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS	+= -Os
 else
-KBUILD_CFLAGS	+= -O2
+KBUILD_CFLAGS	+= -O4
 endif
 
 include $(srctree)/arch/$(SRCARCH)/Makefile
@@ -547,6 +547,9 @@ endif
 ifndef CONFIG_CC_STACKPROTECTOR
 KBUILD_CFLAGS += $(call cc-option, -fno-stack-protector)
 endif
+
+# This warning generated too much noise in a regular build.
+KBUILD_CFLAGS += $(call cc-disable-warning, unused-but-set-variable)
 
 # This warning generated too much noise in a regular build.
 KBUILD_CFLAGS += $(call cc-disable-warning, unused-but-set-variable)
